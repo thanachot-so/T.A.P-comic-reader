@@ -4,6 +4,7 @@ import com.tapcomiccomicreader.dto.ReportRequest;
 import com.tapcomiccomicreader.entity.ReportedComment;
 import com.tapcomiccomicreader.helperclass.ReportStatus;
 import com.tapcomiccomicreader.service.ReportedCommentService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class ReportCommentRestController {
     }
 
     @PostMapping
-    public ResponseEntity<String> report(@RequestBody ReportRequest request) {
+    public ResponseEntity<String> report(@RequestBody @Valid ReportRequest request) {
         reportService.report(request);
         return ResponseEntity.ok("added user " + request.getUuid() + " report");
     }

@@ -1,9 +1,12 @@
 package com.tapcomiccomicreader.rest;
 
 import com.tapcomiccomicreader.dto.AddFriendRequest;
+import com.tapcomiccomicreader.dto.CreateUserRequest;
 import com.tapcomiccomicreader.entity.User;
 import com.tapcomiccomicreader.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,8 +31,14 @@ public class UserRestController {
         return userService.findByUuid(userUuid);
     }
 
+    @PostMapping("/users")
+    public ResponseEntity<Object> createUser(@RequestBody @Valid CreateUserRequest request) {
+        userService.save(new User(request.getName(), request.getPassword()));
+        return ResponseEntity.ok("user: " + request.getName() + " has been created");
+    }
+
     @PostMapping("/users/add")
-    public String addUser(@RequestBody AddFriendRequest friendRequest) {
+    public String addUser(@RequestBody @Valid AddFriendRequest friendRequest) {
         var user = userService.findByUuid(friendRequest.getUserUuid());
         var friend = userService.findByUuid(friendRequest.getFriendUuid());
         boolean isAdd = userService.addFriend(user.getId(), friend.getId());
@@ -39,5 +48,11 @@ public class UserRestController {
         } else {
             return "user " + user.getName() + " removed " + friend.getName();
         }
+    }
+
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<Object> deleteUser(@PathVariable int userId) {
+        userService.deleteById(userId);
+        return ResponseEntity.ok("user id : " + userId + " has been deleted");
     }
 }

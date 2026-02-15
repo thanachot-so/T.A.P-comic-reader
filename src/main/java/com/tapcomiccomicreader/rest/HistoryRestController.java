@@ -3,6 +3,7 @@ package com.tapcomiccomicreader.rest;
 import com.tapcomiccomicreader.dto.ReadHistoryRequest;
 import com.tapcomiccomicreader.entity.ReadHistory;
 import com.tapcomiccomicreader.service.ReadHistoryService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +30,7 @@ public class HistoryRestController {
     }
 
     @PostMapping("/record")
-    public void record(@RequestBody ReadHistoryRequest request) {
+    public void record(@RequestBody @Valid ReadHistoryRequest request) {
         readHistoryService.record(request);
     }
 }

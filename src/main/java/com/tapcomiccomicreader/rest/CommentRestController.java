@@ -4,6 +4,7 @@ import com.tapcomiccomicreader.dto.CommentRequest;
 import com.tapcomiccomicreader.dto.ReplyRequest;
 import com.tapcomiccomicreader.entity.Comment;
 import com.tapcomiccomicreader.service.CommentService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +22,13 @@ public class CommentRestController {
     }
 
     @PostMapping("/add/comment")
-    public ResponseEntity<String> addComment(@RequestBody CommentRequest commentRequest) {
+    public ResponseEntity<String> addComment(@RequestBody @Valid CommentRequest commentRequest) {
             commentService.addComment(commentRequest);
             return ResponseEntity.ok("user: " + commentRequest.getUserUuid() + " commented: " + commentRequest.getText());
     }
 
     @PostMapping("/add/reply")
-    public ResponseEntity<String> addReply(@RequestBody ReplyRequest reply) {
+    public ResponseEntity<String> addReply(@RequestBody @Valid ReplyRequest reply) {
         commentService.reply(reply);
         return ResponseEntity.ok("user: " + reply.getUuid() + " replied: " + reply.getText() + " to comment id: " + reply.getCommentId());
     }
