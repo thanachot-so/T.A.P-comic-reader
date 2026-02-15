@@ -1,10 +1,13 @@
 package com.tapcomiccomicreader.rest;
 
 import com.tapcomiccomicreader.dto.ComicDTO;
+import com.tapcomiccomicreader.dto.CreateComicRequest;
 import com.tapcomiccomicreader.dto.PageDTO;
+import com.tapcomiccomicreader.entity.Comic;
 import com.tapcomiccomicreader.service.ChapterService;
 import com.tapcomiccomicreader.service.ComicService;
 import com.tapcomiccomicreader.service.PageService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +52,16 @@ public class ComicRestController {
             @RequestParam("file") MultipartFile file) throws IOException {
             comicService.uploadCover(id, file);
             return ResponseEntity.ok("file upload successfully");
+    }
+
+    @PostMapping("/comics")
+    public ResponseEntity<Object> createComic(@RequestBody @Valid CreateComicRequest request) {
+        comicService.save(new Comic(request.getName(),
+                request.getDescription(),
+                request.getAuthor(),
+                request.getArtist()));
+
+        return ResponseEntity.ok("comic: " + request.getName() + " has been created");
     }
 
     @PostMapping("/comics/{id}/chapter")
