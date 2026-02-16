@@ -1,6 +1,7 @@
 package com.tapcomiccomicreader.rest;
 
 import com.tapcomiccomicreader.service.ChapterService;
+import com.tapcomiccomicreader.service.ComicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,15 +14,18 @@ import java.util.List;
 @RequestMapping("/api/comics")
 public class ChapterRestController {
     private final ChapterService chapterService;
+    private final ComicService comicService;
 
     @Autowired
-    public ChapterRestController(ChapterService chapterService) {
+    public ChapterRestController(ChapterService chapterService, ComicService comicService) {
         this.chapterService = chapterService;
+        this.comicService = comicService;
     }
 
-    @GetMapping("/{id}/chapter")
-    public ResponseEntity<Object> getChapters(@PathVariable int id) {
-        return ResponseEntity.ok(chapterService.findAll(id));
+    @GetMapping("/{comicUuid}/chapter")
+    public ResponseEntity<Object> getChapters(@PathVariable String comicUuid) {
+        var comic = comicService.findByUuid(comicUuid);
+        return ResponseEntity.ok(chapterService.findAll(comic.getId()));
     }
 
     @PostMapping("/{id}/chapter")
