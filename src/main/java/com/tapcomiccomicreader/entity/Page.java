@@ -1,6 +1,7 @@
 package com.tapcomiccomicreader.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -14,6 +15,7 @@ public class Page {
     private Integer count;
 
     @Column(name = "page_url")
+    @JsonIgnore
     private String url;
 
     @ManyToOne
