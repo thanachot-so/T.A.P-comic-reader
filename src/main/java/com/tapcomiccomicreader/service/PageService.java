@@ -6,13 +6,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 public interface PageService {
-    String findPageUrl(String ComicUuid, int chapterNum, int pageNum);
+    Page find(int pageId);
 
-    void replacePage(int comicId, int chapterNum, int pageNum, MultipartFile file) throws IOException;
+    Page findByRelatedId(int comicId, int chapterNum, int pageNum);
 
-    Page find(int comicId, int chapterNum, int pageNum);
+    void remove(int pageId) throws IOException;
 
-    Page findById(int pageId);
-
-    void remove(int comicId, int chapterNum, int pageNum) throws IOException;
+    void replacePage(int pageId, MultipartFile file) throws IOException;
 }
