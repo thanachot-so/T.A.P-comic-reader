@@ -37,45 +37,40 @@ public class PageServiceImpl implements PageService{
     }
 
     @Override
-    public String findPageUrl(String ComicUuid, int chapterNum, int pageNum) {
-        return pageRepository.findPageUrl(ComicUuid, chapterNum, pageNum)
-                .orElseThrow(() -> new ResourceNotFoundException("could not find the page - " + pageNum + " or the chapter - " + chapterNum));
-    }
-
-    @Override
-    public Page find(int comicId, int chapterNum, int pageNum) {
-        return pageRepository.findPage(comicId, chapterNum, pageNum)
-                .orElseThrow(() -> new ResourceNotFoundException("could not find the page - " + pageNum + " or the chapter - " + chapterNum));
-    }
-
-    @Override
-    public Page findById(int pageId) {
+    public Page find(int pageId) {
         return pageRepository.findById(pageId)
                 .orElseThrow(() -> new ResourceNotFoundException("could not find the page id - " + pageId));
     }
 
     @Override
-    @Transactional
-    public void remove(int comicId, int chapterNum, int pageNum) throws IOException{
-        Page page = find(comicId, chapterNum, pageNum);
-        Path targetPath = getPagePath(comicId, chapterNum, pageNum);
+    public Page findByRelatedId(int comicId, int chapterNum, int pageNum) {
+        return pageRepository.findPage(comicId, chapterNum, pageNum)
+                .orElseThrow(() -> new ResourceNotFoundException("page not found"));
+    }
 
-        Files.deleteIfExists(targetPath);
+    @Transactional
+    @Override
+    public void remove(int pageId) throws IOException{
+        Page page = find(pageId);
+
+        Path targetPath = getPagePath(page);
+        Files.delete(targetPath);
 
         pageRepository.delete(page);
     }
 
     @Override
-    public void replacePage(int comicId, int chapterNum, int pageNum, MultipartFile file) throws IOException{
-        Path targetPath = getPagePath(comicId, chapterNum, pageNum);
+    public void replacePage(int pageId, MultipartFile file) throws IOException{
+        Page page = find(pageId);
+        Path targetPath = getPagePath(page);
 
         Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
     }
 
-    public Path getPagePath(int comicId, int chapterNum, int pageNum) {
-        Page page = find(comicId, chapterNum, pageNum);
-
-        String directory = storageDirectory + comicId +"/Chapters/ch-"+ chapterNum;
+    public Path getPagePath(Page page) {
+        String directory = storageDirectory +"/comics/"+ page.getChapter().getComic().getId() +
+                "/Chapters/ch-"+
+                page.getChapter().getCount();
         String url = page.getUrl();
         String pageName = url.substring(url.lastIndexOf("/"));
 
