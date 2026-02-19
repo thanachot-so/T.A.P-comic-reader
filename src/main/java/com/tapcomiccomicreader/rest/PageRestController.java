@@ -28,26 +28,22 @@ public class PageRestController {
                                                  @PathVariable int chapterNum,
                                                  @PathVariable int pageNum) {
         var comic = comicService.findByUuid(comicUuid);
-        var page = pageService.find(comic.getId(), chapterNum, pageNum);
+        var page = pageService.findByRelatedId(comic.getId(), chapterNum, pageNum);
         return ResponseEntity.ok(new PageDTO(page));
     }
 
-    @PutMapping("/{id}/{chapter}/{page}")
+    @PutMapping("/chapter/{pageId}")
     public ResponseEntity<String> replacePageFile(
             @RequestParam("file") MultipartFile file,
-            @PathVariable int id,
-            @PathVariable int chapter,
-            @PathVariable int page) throws IOException {
-        pageService.replacePage(id, chapter, page, file);
+            @PathVariable int pageId) throws IOException {
+        pageService.replacePage(pageId, file);
         return ResponseEntity.ok("file upload successfully");
     }
 
-    @DeleteMapping("/{id}/{chapter}/{page}")
+    @DeleteMapping("/chapter/page/{pageId}")
     public ResponseEntity<String> deletePageFile(
-            @PathVariable int id,
-            @PathVariable int chapter,
-            @PathVariable int page) throws IOException {
-        pageService.remove(id, chapter, page);
+            @PathVariable int pageId) throws IOException {
+        pageService.remove(pageId);
         return ResponseEntity.ok("page deleted successfully");
     }
 }
