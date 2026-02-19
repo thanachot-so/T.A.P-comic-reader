@@ -12,7 +12,7 @@ public class Page {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "page_number", unique = true)
+    @Column(name = "page_number")
     private Integer count;
 
     @Column(name = "page_url")
@@ -38,14 +38,6 @@ public class Page {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Integer getNumber() {
-        return count;
-    }
-
-    public void setNumber(Integer number) {
-        this.count = number;
     }
 
     public String getUrl() {
