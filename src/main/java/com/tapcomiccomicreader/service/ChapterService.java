@@ -15,5 +15,9 @@ public interface ChapterService {
 
     void save(Chapter chapter);
 
-    void uploadChapter(int comicId, List<MultipartFile> pages) throws IOException;
+    void uploadChapterInSequence(int comicId, List<MultipartFile> pages) throws IOException;
+
+    void reUploadChapter(int comicId, int chapterNum, List<MultipartFile> pages) throws IOException;
+
+    void remove(int id) throws IOException;
 }
