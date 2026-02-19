@@ -28,11 +28,19 @@ public class ChapterRestController {
         return ResponseEntity.ok(chapterService.findAll(comic.getId()));
     }
 
-    @PostMapping("/{id}/chapter")
-    public ResponseEntity<String> uploadChapter(
-            @PathVariable int id,
+    @PostMapping("/{comicId}/chapter")
+    public ResponseEntity<String> uploadChapterInSequence(
+            @PathVariable int comicId,
             @RequestParam("file") List<MultipartFile> files) throws IOException {
-        chapterService.uploadChapter(id, files);
+        chapterService.uploadChapterInSequence(comicId, files);
+        return ResponseEntity.ok("file upload successfully");
+    }
+
+    @PostMapping("/{comicId}/chapter/{chapterNum}")
+    public ResponseEntity<Object> uploadChapter(@PathVariable int chapterNum,
+                                                @PathVariable int comicId,
+                                                @RequestParam("file") List<MultipartFile> files) throws IOException{
+        chapterService.reUploadChapter(comicId, chapterNum, files);
         return ResponseEntity.ok("file upload successfully");
     }
 
