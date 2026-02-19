@@ -35,4 +35,11 @@ public class ChapterRestController {
         chapterService.uploadChapter(id, files);
         return ResponseEntity.ok("file upload successfully");
     }
+
+    @DeleteMapping("/chapter/{chapterId}")
+    public ResponseEntity<Object> removeChapterById(
+            @PathVariable int chapterId) throws IOException{
+        chapterService.remove(chapterId);
+        return ResponseEntity.ok("successfully removed chapter id - " + chapterId);
+    }
 }
