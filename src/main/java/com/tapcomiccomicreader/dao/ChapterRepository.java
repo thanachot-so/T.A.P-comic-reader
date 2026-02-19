@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ChapterRepository extends JpaRepository<Chapter,Integer> {
     @Query("SELECT c FROM Chapter c " +
@@ -16,4 +17,9 @@ public interface ChapterRepository extends JpaRepository<Chapter,Integer> {
     @Query("SELECT COALESCE(MAX(c.count), 0) FROM Chapter c WHERE c.comic.id=:comicId")
     Integer findLastChapterNumber(@Param("comicId") Integer comicId);
 
+    @Query("SELECT c FROM Chapter c " +
+            "WHERE c.comic.id = :comicId " +
+            "AND c.count = :chapterNum")
+    Optional<Chapter> findByChapterNum(@Param("comicId") int comicId,
+                                       @Param("chapterNum") int chapterNum);
 }
