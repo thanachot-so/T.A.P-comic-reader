@@ -49,7 +49,7 @@ public class CommentServiceImpl implements CommentService{
         Comment comment = new Comment(user, text);
 
         if (commentRequest.isPageComment()) {
-            Page page = pageService.findById(commentRequest.getPageId());
+            Page page = pageService.find(commentRequest.getPageId());
             comment.setPage(page);
         } else if (commentRequest.isChapterComment()) {
             Chapter chapter = chapterService.find(commentRequest.getChapterId());
