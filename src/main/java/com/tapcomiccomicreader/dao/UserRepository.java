@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User,Integer> {
-    Optional<User> findByUuid(String uuid);
     @Query("SELECT u FROM User u " +
             "WHERE u.uuid = :uuid")
     Optional<User> findByUuid(@Param("uuid") String uuid);
