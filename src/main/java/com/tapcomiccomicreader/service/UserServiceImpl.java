@@ -1,21 +1,28 @@
 package com.tapcomiccomicreader.service;
 
 import com.tapcomiccomicreader.dao.UserRepository;
+import com.tapcomiccomicreader.dto.FavoriteComicRequest;
+import com.tapcomiccomicreader.dto.LoginRequest;
 import com.tapcomiccomicreader.entity.User;
 import com.tapcomiccomicreader.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
+    private final ComicService comicService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, ComicService comicService) {
         this.userRepository = userRepository;
+        this.comicService = comicService;
     }
 
     @Override
@@ -58,5 +65,31 @@ public class UserServiceImpl implements UserService{
         userRepository.save(user);
 
         return isAdd;
+    }
+
+    @Override
+    public ResponseEntity<Map<String, Boolean>> login(LoginRequest request) {
+        var user = userRepository.login(request.getName(), request.getPassword());
+        var body = new HashMap<String, Boolean>();
+
+        body.put("Status:" , true);
+
+        if (user.isEmpty()) {
+            body.put("Status:" , false);
+        }
+        return ResponseEntity.ok(body);
+    }
+
+    @Override
+    @Transactional
+    public void favorite(FavoriteComicRequest request) {
+        var userId = findByUuid(request.getUserUuid()).getId();
+        var comicId = comicService.findByUuid(request.getComicUuid()).getId();
+
+        if (userRepository.isFollowed(userId, comicId)) {
+            userRepository.removeFollowed(userId, comicId);
+        } else {
+            userRepository.followComic(userId, comicId);
+        }
     }
 }
