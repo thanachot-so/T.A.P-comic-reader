@@ -2,11 +2,13 @@ package com.tapcomiccomicreader.rest;
 
 import com.tapcomiccomicreader.dto.ComicDTO;
 import com.tapcomiccomicreader.dto.CreateComicRequest;
+import com.tapcomiccomicreader.dto.SearchComicRequest;
 import com.tapcomiccomicreader.dto.UpdateComicRequest;
 import com.tapcomiccomicreader.entity.Comic;
 import com.tapcomiccomicreader.service.ComicService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -54,5 +56,11 @@ public class ComicRestController {
                                               @RequestBody UpdateComicRequest request) {
         var updatedComic = comicService.updateComic(id, request);
         return ResponseEntity.ok(updatedComic);
+    }
+
+    @PostMapping("/search")
+    public Page<Comic> search(@RequestBody SearchComicRequest request,
+                              @RequestParam(defaultValue = "0") int page) {
+        return comicService.search(request.getKeyword(), page);
     }
 }
