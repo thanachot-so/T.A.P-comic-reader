@@ -15,8 +15,8 @@ public interface ComicRepository  extends JpaRepository<Comic,Integer> {
     Optional<Comic> findComicByUuid(@Param("uuid") String uuid);
 
     @Query(value = "SELECT *, " +
-            "(SELECT COUNT(*) FROM user_follows uf WHERE uf.comic_id = id ) AS followerCount, " +
-            "(SELECT COUNT(*) FROM comic_chapter cc WHERE cc.comic_id = id) AS chapterCount " +
+            "(SELECT COUNT(*) FROM user_follows uf WHERE uf.comic_id = comic.id ) AS followerCount, " +
+            "(SELECT COUNT(*) FROM comic_chapter cc WHERE cc.comic_id = comic.id) AS chapterCount " +
             "FROM comic WHERE title ILIKE '%' || :keyword || '%' OR title % :keyword " +
             "ORDER BY similarity(title, :keyword) DESC", nativeQuery = true)
     Page<Comic> searchByTitle(@Param("keyword") String keyword, Pageable pageable);
