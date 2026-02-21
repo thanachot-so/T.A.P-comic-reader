@@ -26,7 +26,7 @@ public class Comic {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "description")
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "author")
