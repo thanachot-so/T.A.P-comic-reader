@@ -33,5 +33,6 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     void removeFollowed(@Param("userId") int userId,
                         @Param("comicId") int comicId);
 
-
+    @Query("SELECT COUNT (*) > 0 FROM User u WHERE u.name = :name")
+    boolean isExist(@Param("name") String name);
 }
