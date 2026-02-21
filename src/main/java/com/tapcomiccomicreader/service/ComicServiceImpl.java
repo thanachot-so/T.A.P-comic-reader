@@ -7,6 +7,9 @@ import com.tapcomiccomicreader.exception.ResourceNotFoundException;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -61,6 +64,19 @@ public class ComicServiceImpl implements ComicService{
     public Comic findByUuid(String comicUuid) {
         return comicRepository.findComicByUuid(comicUuid)
                 .orElseThrow(() -> new ResourceNotFoundException("could not find comic with uuid " + comicUuid));
+    }
+
+    @Override
+    public Page<Comic> search(String keyword, int pageNumber) {
+        if (keyword == null || keyword.trim().length() < 4) {
+            throw new IllegalArgumentException("need more character to search");
+        }
+
+        int pageSize = 20;
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        return comicRepository.searchByTitle(keyword, pageable);
     }
 
     @Override
