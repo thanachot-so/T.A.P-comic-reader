@@ -36,7 +36,7 @@ public class UserRestController {
 
     @PostMapping
     public ResponseEntity<Object> createUser(@RequestBody @Valid CreateUserRequest request) {
-        userService.save(new User(request.getName(), request.getPassword()));
+        userService.create(new User(request.getName(), request.getPassword()));
         return ResponseEntity.ok("user: " + request.getName() + " has been created");
     }
 

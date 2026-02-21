@@ -31,6 +31,14 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public void create(User user) {
+        if (userRepository.isExist(user.getName())) {
+            throw new RuntimeException("username is already exist");
+        }
+        save(user);
+    }
+
+    @Override
     public void deleteById(int id) {
         userRepository.deleteById(id);
     }

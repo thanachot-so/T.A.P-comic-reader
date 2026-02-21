@@ -11,6 +11,8 @@ import java.util.Map;
 public interface UserService{
     void save(User user);
 
+    void create(User user);
+
     void deleteById(int id);
 
     List<User> findAll();
