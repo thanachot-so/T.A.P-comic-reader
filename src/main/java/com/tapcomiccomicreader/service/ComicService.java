@@ -1,5 +1,6 @@
 package com.tapcomiccomicreader.service;
 
+import com.tapcomiccomicreader.dto.UpdateComicRequest;
 import com.tapcomiccomicreader.entity.Comic;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,4 +19,6 @@ public interface ComicService {
     Comic findByUuid(String comicUuid);
 
     void uploadCover(int comicId, MultipartFile file) throws IOException;
+
+    Comic updateComic(int comicId, UpdateComicRequest request);
 }

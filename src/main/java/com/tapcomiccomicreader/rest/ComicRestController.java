@@ -2,6 +2,7 @@ package com.tapcomiccomicreader.rest;
 
 import com.tapcomiccomicreader.dto.ComicDTO;
 import com.tapcomiccomicreader.dto.CreateComicRequest;
+import com.tapcomiccomicreader.dto.UpdateComicRequest;
 import com.tapcomiccomicreader.entity.Comic;
 import com.tapcomiccomicreader.service.ComicService;
 import jakarta.validation.Valid;
@@ -46,5 +47,12 @@ public class ComicRestController {
                 request.getArtist()));
 
         return ResponseEntity.ok("comic: " + request.getName() + " has been created");
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Object> updateComic(@PathVariable int id,
+                                              @RequestBody UpdateComicRequest request) {
+        var updatedComic = comicService.updateComic(id, request);
+        return ResponseEntity.ok(updatedComic);
     }
 }

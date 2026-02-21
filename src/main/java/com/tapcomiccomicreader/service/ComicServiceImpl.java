@@ -1,6 +1,7 @@
 package com.tapcomiccomicreader.service;
 
 import com.tapcomiccomicreader.dao.ComicRepository;
+import com.tapcomiccomicreader.dto.UpdateComicRequest;
 import com.tapcomiccomicreader.entity.Comic;
 import com.tapcomiccomicreader.exception.ResourceNotFoundException;
 import jakarta.annotation.PostConstruct;
@@ -77,5 +78,25 @@ public class ComicServiceImpl implements ComicService{
 
         comic.setCoverUrl(fileUrl);
         comicRepository.save(comic);
+    }
+
+    @Override
+    public Comic updateComic(int comicId, UpdateComicRequest request) {
+        var comic = find(comicId);
+
+        if (request.getName() != null) {
+            comic.setTitle(request.getName());
+        }
+        if (request.getDescription() != null) {
+            comic.setDescription(request.getDescription());
+        }
+        if (request.getAuthor() != null) {
+            comic.setAuthor(request.getAuthor());
+        }
+        if (request.getArtist() != null) {
+            comic.setArtist(request.getArtist());
+        }
+
+        return comicRepository.save(comic);
     }
 }
