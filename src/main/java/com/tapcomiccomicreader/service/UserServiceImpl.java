@@ -3,9 +3,13 @@ package com.tapcomiccomicreader.service;
 import com.tapcomiccomicreader.dao.UserRepository;
 import com.tapcomiccomicreader.dto.FavoriteComicRequest;
 import com.tapcomiccomicreader.dto.LoginRequest;
+import com.tapcomiccomicreader.dto.UserDTO;
 import com.tapcomiccomicreader.entity.User;
 import com.tapcomiccomicreader.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -99,5 +103,16 @@ public class UserServiceImpl implements UserService{
         } else {
             userRepository.followComic(userId, comicId);
         }
+    }
+
+    @Override
+    public Page<UserDTO> search(String keyword, int pageNumber) {
+        int pageSize = 20;
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        var userPages = userRepository.searchByName(keyword, pageable);
+
+        return userPages.map(UserDTO::new);
     }
 }
