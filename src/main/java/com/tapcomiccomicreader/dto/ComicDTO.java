@@ -5,7 +5,7 @@ import com.tapcomiccomicreader.entity.Comic;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 public class ComicDTO {
-    private String url;
+    private String coverUrl;
 
     @JsonUnwrapped
     private Comic comic;
@@ -15,16 +15,16 @@ public class ComicDTO {
                 .build()
                 .toUriString();
 
-        url = domain + comic.getCoverUrl();
+        coverUrl = domain + comic.getCoverUrl();
         this.comic = comic;
     }
 
-    public String getUrl() {
-        return url;
+    public String getCoverUrl() {
+        return coverUrl;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
     }
 
     public Comic getComic() {
@@ -38,7 +38,7 @@ public class ComicDTO {
     @Override
     public String toString() {
         return "ComicDTO{" +
-                "url='" + url + '\'' +
+                "url='" + coverUrl + '\'' +
                 ", comic=" + comic +
                 '}';
     }
