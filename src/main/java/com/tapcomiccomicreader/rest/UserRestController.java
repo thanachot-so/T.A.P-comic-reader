@@ -1,13 +1,11 @@
 package com.tapcomiccomicreader.rest;
 
-import com.tapcomiccomicreader.dto.AddFriendRequest;
-import com.tapcomiccomicreader.dto.CreateUserRequest;
-import com.tapcomiccomicreader.dto.FavoriteComicRequest;
-import com.tapcomiccomicreader.dto.LoginRequest;
+import com.tapcomiccomicreader.dto.*;
 import com.tapcomiccomicreader.entity.User;
 import com.tapcomiccomicreader.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,8 +23,10 @@ public class UserRestController {
     }
 
     @GetMapping
-    public List<User> findAll() {
-        return userService.findAll();
+    public List<UserDTO> findAll() {
+        return userService.findAll().stream()
+                .map(UserDTO::new)
+                .toList();
     }
 
     @GetMapping("/{userUuid}")
@@ -68,5 +68,11 @@ public class UserRestController {
     public ResponseEntity<Object> favorite(@RequestBody @Valid FavoriteComicRequest request) {
         userService.favorite(request);
         return ResponseEntity.ok("request success");
+    }
+
+    @PostMapping("/search")
+    public Page<UserDTO> search(@RequestBody @Valid SearchUserRequest request,
+                                @RequestParam(defaultValue = "0") int page) {
+        return userService.search(request.getKeyword(), page);
     }
 }
