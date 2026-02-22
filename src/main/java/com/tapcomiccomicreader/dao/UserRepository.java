@@ -1,6 +1,8 @@
 package com.tapcomiccomicreader.dao;
 
 import com.tapcomiccomicreader.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -35,4 +37,13 @@ public interface UserRepository extends JpaRepository<User,Integer> {
 
     @Query("SELECT COUNT (*) > 0 FROM User u WHERE u.name = :name")
     boolean isExist(@Param("name") String name);
+
+    @Query(value = "SELECT * ," +
+            "(SELECT COUNT(*) FROM user_follows uf WHERE uf.user_id = users.id) AS followedComicsCount," +
+            "(SELECT COUNT(*) FROM user_friends ufr WHERE ufr.user_id = users.id) AS friends " +
+            "FROM users " +
+            "WHERE name ILIKE '%' || :keyword || '%' OR name % :keyword " +
+            "ORDER BY similarity(name, :keyword) DESC", nativeQuery = true)
+    Page<User> searchByName(@Param("keyword") String keyword, Pageable pageable);
+
 }
