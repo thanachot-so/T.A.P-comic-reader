@@ -1,5 +1,6 @@
 package com.tapcomiccomicreader.service;
 
+import com.tapcomiccomicreader.dto.ComicDTO;
 import com.tapcomiccomicreader.dto.UpdateComicRequest;
 import com.tapcomiccomicreader.entity.Comic;
 import org.springframework.data.domain.Page;
@@ -19,7 +20,7 @@ public interface ComicService {
 
     Comic findByUuid(String comicUuid);
 
-    Page<Comic> search(String keyword, int pageNumber);
+    Page<ComicDTO> search(String keyword, int pageNumber);
 
     void uploadCover(int comicId, MultipartFile file) throws IOException;
 
