@@ -2,7 +2,9 @@ package com.tapcomiccomicreader.service;
 
 import com.tapcomiccomicreader.dto.FavoriteComicRequest;
 import com.tapcomiccomicreader.dto.LoginRequest;
+import com.tapcomiccomicreader.dto.UserDTO;
 import com.tapcomiccomicreader.entity.User;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -26,4 +28,6 @@ public interface UserService{
     ResponseEntity<Map<String, Boolean>> login(LoginRequest request);
 
     void favorite(FavoriteComicRequest request);
+
+    Page<UserDTO> search(String keyword, int pageNumber);
 }
