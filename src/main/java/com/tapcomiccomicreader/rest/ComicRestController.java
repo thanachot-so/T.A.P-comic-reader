@@ -59,8 +59,8 @@ public class ComicRestController {
     }
 
     @PostMapping("/search")
-    public Page<Comic> search(@RequestBody SearchComicRequest request,
-                              @RequestParam(defaultValue = "0") int page) {
+    public Page<ComicDTO> search(@RequestBody SearchComicRequest request,
+                                 @RequestParam(defaultValue = "0") int page) {
         return comicService.search(request.getKeyword(), page);
     }
 }
