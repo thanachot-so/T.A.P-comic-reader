@@ -1,6 +1,7 @@
 package com.tapcomiccomicreader.service;
 
 import com.tapcomiccomicreader.dao.ComicRepository;
+import com.tapcomiccomicreader.dto.ComicDTO;
 import com.tapcomiccomicreader.dto.UpdateComicRequest;
 import com.tapcomiccomicreader.entity.Comic;
 import com.tapcomiccomicreader.exception.ResourceNotFoundException;
@@ -67,7 +68,7 @@ public class ComicServiceImpl implements ComicService{
     }
 
     @Override
-    public Page<Comic> search(String keyword, int pageNumber) {
+    public Page<ComicDTO> search(String keyword, int pageNumber) {
         if (keyword == null || keyword.trim().length() < 4) {
             throw new IllegalArgumentException("need more character to search");
         }
@@ -76,7 +77,8 @@ public class ComicServiceImpl implements ComicService{
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
 
-        return comicRepository.searchByTitle(keyword, pageable);
+        var comicPages = comicRepository.searchByTitle(keyword, pageable);
+        return comicPages.map(ComicDTO::new);
     }
 
     @Override
