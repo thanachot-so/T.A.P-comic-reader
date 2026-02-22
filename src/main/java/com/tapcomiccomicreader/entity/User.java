@@ -2,6 +2,7 @@ package com.tapcomiccomicreader.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Formula;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,12 @@ public class User {
         inverseJoinColumns = @JoinColumn(name = "friend_id")
     )
     private List<User> followedFriends;
+
+    @Formula("(SELECT COUNT(*) FROM user_follows uf WHERE uf.user_id = id)")
+    private Integer followedComicsCount;
+
+    @Formula("(SELECT COUNT(*) FROM user_friends ufr WHERE ufr.user_id = id)")
+    private Integer friends;
 
     public User() {
         this.uuid = java.util.UUID.randomUUID().toString();
@@ -127,6 +134,22 @@ public class User {
 
     public void setFollowedFriends(List<User> followedFriends) {
         this.followedFriends = followedFriends;
+    }
+
+    public Integer getFollowedComicsCount() {
+        return followedComicsCount;
+    }
+
+    public void setFollowedComicsCount(Integer followedComicsCount) {
+        this.followedComicsCount = followedComicsCount;
+    }
+
+    public Integer getFriends() {
+        return friends;
+    }
+
+    public void setFriends(Integer friends) {
+        this.friends = friends;
     }
 
     @Override
