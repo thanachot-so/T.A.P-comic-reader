@@ -34,6 +34,12 @@ public class UserRestController {
         return userService.findByUuid(userUuid);
     }
 
+    @GetMapping("/{userUuid}/friends")
+    public Page<UserDTO> getUserFriends(@PathVariable String userUuid,
+                                        @RequestParam(defaultValue = "0") int page) {
+        return userService.findFriends(userUuid, page);
+    }
+
     @PostMapping
     public ResponseEntity<Object> createUser(@RequestBody @Valid CreateUserRequest request) {
         userService.create(new User(request.getName(), request.getPassword()));

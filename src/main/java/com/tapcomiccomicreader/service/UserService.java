@@ -30,4 +30,6 @@ public interface UserService{
     void favorite(FavoriteComicRequest request);
 
     Page<UserDTO> search(String keyword, int pageNumber);
+
+    Page<UserDTO> findFriends(String uuid, int pageNumber);
 }

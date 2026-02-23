@@ -115,4 +115,16 @@ public class UserServiceImpl implements UserService{
 
         return userPages.map(UserDTO::new);
     }
+
+    @Override
+    public Page<UserDTO> findFriends(String uuid, int pageNumber) {
+        var user = findByUuid(uuid);
+        int pageSize = 10;
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        var friendPages = userRepository.findFriend(user.getId(), pageable);
+
+        return friendPages.map(UserDTO::new);
+    }
 }
