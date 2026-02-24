@@ -34,6 +34,12 @@ public class UserRestController {
         return userService.findByUuid(userUuid);
     }
 
+    @GetMapping("/{userUuid}/library")
+    public LibraryDTO getUserLibrary(@PathVariable String userUuid) {
+        var user = userService.findByUuid(userUuid);
+        return new LibraryDTO(user);
+    }
+
     @GetMapping("/{userUuid}/friends")
     public Page<UserDTO> getUserFriends(@PathVariable String userUuid,
                                         @RequestParam(defaultValue = "0") int page) {
