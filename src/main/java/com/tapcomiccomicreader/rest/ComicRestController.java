@@ -33,6 +33,11 @@ public class ComicRestController {
                 .toList();
     }
 
+    @GetMapping("/{uuid}")
+    public ComicDTO find(@PathVariable String uuid) {
+        return new ComicDTO(comicService.findByUuid(uuid));
+    }
+
     @PostMapping("/{id}/cover")
     public ResponseEntity<String> uploadCover(
             @PathVariable int id,
