@@ -1,6 +1,7 @@
 package com.tapcomiccomicreader.service;
 
 import com.tapcomiccomicreader.dao.PageRepository;
+import com.tapcomiccomicreader.dto.PageDTO;
 import com.tapcomiccomicreader.entity.Page;
 import com.tapcomiccomicreader.exception.ResourceNotFoundException;
 import jakarta.annotation.PostConstruct;
@@ -15,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 
 @Service
 public class PageServiceImpl implements PageService{
@@ -65,6 +67,18 @@ public class PageServiceImpl implements PageService{
         Path targetPath = getPagePath(page);
 
         Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+    }
+    @Override
+    public List<PageDTO> findByComicUuidAndChapterNum(String uuid, int chapterNum) {
+        var pages = pageRepository.findByComicUuidAndChapterNum(uuid, chapterNum);
+
+        if (pages.isEmpty()) {
+            throw new ResourceNotFoundException("could not find pages with uuid - " + uuid + " or chapter number - " + chapterNum);
+        }
+
+        return pages.stream()
+                .map(PageDTO::new)
+                .toList();
     }
 
     public Path getPagePath(Page page) {
