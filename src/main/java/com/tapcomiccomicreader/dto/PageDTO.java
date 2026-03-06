@@ -1,23 +1,19 @@
 package com.tapcomiccomicreader.dto;
 
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.tapcomiccomicreader.entity.Page;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 public class PageDTO {
     private String pageUrl;
-
-    @JsonUnwrapped
-    private Page page;
+    private int pageNumber;
 
     public PageDTO(Page page) {
-        this.page = page;
-
         String url = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .build()
                 .toUriString();
 
         this.pageUrl = url + page.getUrl();
+        this.pageNumber = page.getCount();
     }
 
     public PageDTO() {
@@ -31,19 +27,19 @@ public class PageDTO {
         this.pageUrl = pageUrl;
     }
 
-    public Page getPage() {
-        return page;
+    public int getPageNumber() {
+        return pageNumber;
     }
 
-    public void setPage(Page page) {
-        this.page = page;
+    public void setPageNumber(int pageNumber) {
+        this.pageNumber = pageNumber;
     }
 
     @Override
     public String toString() {
         return "PageDTO{" +
                 "pageUrl='" + pageUrl + '\'' +
-                ", page=" + page +
+                ", pageNumber=" + pageNumber +
                 '}';
     }
 }
