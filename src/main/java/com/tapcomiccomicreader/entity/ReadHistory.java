@@ -1,5 +1,6 @@
 package com.tapcomiccomicreader.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -34,6 +35,7 @@ public class ReadHistory {
     @Column(name = "current_page")
     private Integer pageNumber;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "last_read_at")
     private LocalDateTime lastReadAt;
 
@@ -97,8 +99,8 @@ public class ReadHistory {
     }
 
     @JsonProperty
-    public Integer getComicId() {
-        return comic.getId();
+    public String getComicUuid() {
+        return comic.getUuid();
     }
 
     @JsonProperty
