@@ -38,7 +38,7 @@ public class Chapter {
     @Formula("(SELECT COUNT(*) FROM Page p WHERE p.chapter_id = id)")
     private Integer pageCount;
 
-    @JsonFormat(pattern = "yyyy-mm-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "create_at")
     private LocalDateTime createAt;
 
