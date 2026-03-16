@@ -13,7 +13,7 @@ import java.util.Map;
 public interface UserService{
     void save(User user);
 
-    void create(User user);
+    void create(String name, String password);
 
     void deleteById(int id);
 

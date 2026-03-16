@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,11 +23,13 @@ import java.util.Map;
 public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final ComicService comicService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, ComicService comicService) {
+    public UserServiceImpl(UserRepository userRepository, ComicService comicService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.comicService = comicService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -35,10 +38,16 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void create(User user) {
-        if (userRepository.isExist(user.getName())) {
-            throw new RuntimeException("username is already exist");
+    public void create(String name, String password) {
+        if (userRepository.isExist(name)) {
+            throw new RuntimeException("username has been taken");
         }
+
+        String hashedPassword = passwordEncoder.encode(password);
+        User user = new User(name, hashedPassword);
+
+        user.setRole("USER");
+
         save(user);
     }
 
