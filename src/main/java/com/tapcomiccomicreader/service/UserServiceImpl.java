@@ -89,19 +89,6 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public ResponseEntity<Map<String, Boolean>> login(LoginRequest request) {
-        var user = userRepository.login(request.getName(), request.getPassword());
-        var body = new HashMap<String, Boolean>();
-
-        body.put("Status:" , true);
-
-        if (user.isEmpty()) {
-            body.put("Status:" , false);
-        }
-        return ResponseEntity.ok(body);
-    }
-
-    @Override
     @Transactional
     public void favorite(FavoriteComicRequest request) {
         var userId = findByUuid(request.getUserUuid()).getId();

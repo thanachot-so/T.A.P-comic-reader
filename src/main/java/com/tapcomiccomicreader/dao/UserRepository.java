@@ -19,12 +19,6 @@ public interface UserRepository extends JpaRepository<User,Integer> {
             "WHERE u.name = :username")
     Optional<User> findByName(@Param("username") String username);
 
-    @Query("SELECT u FROM User u " +
-            "WHERE u.name = :name " +
-            "AND u.password = :password")
-    Optional<User> login(@Param("name") String name,
-                         @Param("password") String password);
-
     @Query(value = "SELECT COUNT (*) > 0 FROM user_follows WHERE user_id = :userId AND comic_id = :comicId", nativeQuery = true)
     boolean isFollowed(@Param("userId") int userId,
                        @Param("comicId") int comicId);

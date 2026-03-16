@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -69,11 +68,6 @@ public class UserRestController {
     public ResponseEntity<Object> deleteUser(@PathVariable int userId) {
         userService.deleteById(userId);
         return ResponseEntity.ok("user id : " + userId + " has been deleted");
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<Map<String, Boolean>> login(@RequestBody @Valid LoginRequest request) {
-        return userService.login(request);
     }
 
     @PostMapping("/follow")
