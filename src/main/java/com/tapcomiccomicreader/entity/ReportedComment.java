@@ -1,5 +1,6 @@
 package com.tapcomiccomicreader.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.tapcomiccomicreader.helperclass.ReportStatus;
@@ -37,6 +38,7 @@ public class ReportedComment {
     @Column(name = "status", nullable = false)
     private ReportStatus status = ReportStatus.PENDING;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "create_at")
     private LocalDateTime createAt;
 
