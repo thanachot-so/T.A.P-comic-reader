@@ -22,8 +22,12 @@ public class User {
     @JsonIgnore
     private String token;
 
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String name;
+
+    @Column(name = "role")
+    @JsonIgnore
+    private String role;
 
     @Column(name = "password")
     @JsonIgnore
@@ -152,16 +156,27 @@ public class User {
         this.friends = friends;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", UUID='" + uuid + '\'' +
+                ", uuid='" + uuid + '\'' +
                 ", token='" + token + '\'' +
                 ", name='" + name + '\'' +
+                ", role='" + role + '\'' +
                 ", password='" + password + '\'' +
                 ", followedComics=" + followedComics +
                 ", followedFriends=" + followedFriends +
+                ", followedComicsCount=" + followedComicsCount +
+                ", friends=" + friends +
                 '}';
     }
 }
