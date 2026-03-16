@@ -1,9 +1,9 @@
 package com.tapcomiccomicreader.dto;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 public class RequestTokenRefresh {
-    @NotNull
+    @NotBlank
     private String refreshToken;
 
     public String getRefreshToken() {
