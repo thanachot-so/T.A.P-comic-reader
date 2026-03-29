@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -38,14 +39,24 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, CorsConfigurationSource corsConfigurationSource) throws Exception {
         http.authorizeHttpRequests(
                 auth -> auth
+//                auth mapping
                 .requestMatchers("/api/auth/**").permitAll()
+
+//                image mapping
+                .requestMatchers(HttpMethod.GET, "/images/**").hasRole("USER")
 
 //                comic mapping
                 .requestMatchers(HttpMethod.POST, "/api/comics/search").hasRole("USER")
+                .requestMatchers(HttpMethod.POST, "/api/comics/filter").hasRole("USER")
                 .requestMatchers(HttpMethod.GET, "/api/comics/**").hasRole("USER")
                 .requestMatchers(HttpMethod.PATCH, "/api/comics/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/comics/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/api/comics/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/comics/**").hasRole("ADMIN")
+
+//                genre mapping
+                .requestMatchers(HttpMethod.GET, "/api/genres/**").hasRole("USER")
+                .requestMatchers("/api/genres/**").hasRole("ADMIN")
 
 //                comment mapping
                 .requestMatchers("/api/comments/**").hasRole("USER")
