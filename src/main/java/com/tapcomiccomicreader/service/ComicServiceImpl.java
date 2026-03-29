@@ -1,9 +1,11 @@
 package com.tapcomiccomicreader.service;
 
 import com.tapcomiccomicreader.dao.ComicRepository;
+import com.tapcomiccomicreader.dao.GenreRepository;
 import com.tapcomiccomicreader.dto.ComicDTO;
 import com.tapcomiccomicreader.dto.UpdateComicRequest;
 import com.tapcomiccomicreader.entity.Comic;
+import com.tapcomiccomicreader.entity.Genre;
 import com.tapcomiccomicreader.exception.ResourceNotFoundException;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -19,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class ComicServiceImpl implements ComicService{
@@ -27,10 +31,12 @@ public class ComicServiceImpl implements ComicService{
     private String storageDirectory;
 
     private final ComicRepository comicRepository;
+    private final GenreRepository genreRepository;
 
     @Autowired
-    public ComicServiceImpl(ComicRepository comicRepository) {
+    public ComicServiceImpl(ComicRepository comicRepository, GenreRepository genreRepository) {
         this.comicRepository = comicRepository;
+        this.genreRepository = genreRepository;
     }
 
     @PostConstruct
@@ -82,6 +88,16 @@ public class ComicServiceImpl implements ComicService{
     }
 
     @Override
+    public Page<ComicDTO> searchByGenre(Set<Integer> genreIds, int pageNumber) {
+        int pageSize = 20;
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        var comicPages = comicRepository.searchByGenre(genreIds, pageable);
+        return comicPages.map(ComicDTO::new);
+    }
+
+    @Override
     public void uploadCover(int comicId, MultipartFile file) throws IOException {
         var comic = find(comicId);
         String coverName = comic.getUuid() + "_" + file.getOriginalFilename();
@@ -116,5 +132,24 @@ public class ComicServiceImpl implements ComicService{
         }
 
         return comicRepository.save(comic);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Set<Genre> getGenresByComicUuid(String comicUuid) {
+        var comic = findByUuid(comicUuid);
+
+        return comic.getGenres();
+    }
+
+    @Override
+    @Transactional
+    public void setComicGenres(String comicUuid, Set<Integer> genreIds) {
+        var comic = findByUuid(comicUuid);
+
+        List<Genre> genres = genreRepository.findAllById(genreIds);
+
+        comic.getGenres().clear();
+        comic.getGenres().addAll(genres);
     }
 }
