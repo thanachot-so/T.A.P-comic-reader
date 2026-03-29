@@ -6,7 +6,9 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.Formula;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "comic")
@@ -39,9 +41,13 @@ public class Comic {
     @JsonIgnore
     private List<User> followers;
 
-    @ElementCollection
-    @CollectionTable(name = "comic_genres", joinColumns = @JoinColumn(name = "comic"))
-    private List<String> genres;
+    @ManyToMany
+    @JoinTable(
+            name = "comic_genres",
+            joinColumns = @JoinColumn(name = "comic_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id")
+    )
+    private Set<Genre> genres;
 
     @OneToMany(mappedBy = "comic", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -65,7 +71,7 @@ public class Comic {
 
     public Comic() {
         this.uuid = java.util.UUID.randomUUID().toString();
-        this.genres = new ArrayList<>();
+        this.genres = new HashSet<>();
         this.followers = new ArrayList<>();
         this.chapters = new ArrayList<>();
     }
@@ -132,11 +138,11 @@ public class Comic {
         this.artist = artist;
     }
 
-    public List<String> getGenres() {
+    public Set<Genre> getGenres() {
         return genres;
     }
 
-    public void setGenres(List<String> genres) {
+    public void setGenres(Set<Genre> genres) {
         this.genres = genres;
     }
 
