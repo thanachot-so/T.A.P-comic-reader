@@ -35,10 +35,12 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         if (username.equals(adminUsername)) {
+            String[] roles = adminRole.split(",");
+
             return org.springframework.security.core.userdetails.User.builder()
                     .username(adminUsername)
                     .password(adminPassword)
-                    .roles(adminRole)
+                    .roles(roles)
                     .build();
         }
 
