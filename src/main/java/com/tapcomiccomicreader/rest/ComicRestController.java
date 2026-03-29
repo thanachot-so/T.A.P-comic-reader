@@ -70,9 +70,24 @@ public class ComicRestController {
         return ResponseEntity.ok(updatedComic);
     }
 
-    @PostMapping("/search")
-    public Page<ComicDTO> search(@RequestBody SearchComicRequest request,
+    @PutMapping("/{uuid}/genres")
+    public ResponseEntity<Object> updateAllComicGenres(@PathVariable String uuid,
+                                                       @RequestBody Set<Integer> genreIds) {
+        comicService.setComicGenres(uuid,genreIds);
+
+        var comic = comicService.findByUuid(uuid);
+        return ResponseEntity.ok(comic);
+    }
+
+    @GetMapping("/search")
+    public Page<ComicDTO> search(@RequestParam String keyword,
                                  @RequestParam(defaultValue = "0") int page) {
-        return comicService.search(request.getKeyword(), page);
+        return comicService.search(keyword, page);
+    }
+
+    @GetMapping("/filter")
+    public Page<ComicDTO> filter(@RequestParam Set<Integer> genreIds,
+                                 @RequestParam(defaultValue = "0") int page) {
+        return comicService.searchByGenre(genreIds, page);
     }
 }
