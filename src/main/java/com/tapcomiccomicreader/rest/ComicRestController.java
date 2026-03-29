@@ -2,7 +2,6 @@ package com.tapcomiccomicreader.rest;
 
 import com.tapcomiccomicreader.dto.ComicDTO;
 import com.tapcomiccomicreader.dto.CreateComicRequest;
-import com.tapcomiccomicreader.dto.SearchComicRequest;
 import com.tapcomiccomicreader.dto.UpdateComicRequest;
 import com.tapcomiccomicreader.entity.Comic;
 import com.tapcomiccomicreader.service.ComicService;
@@ -15,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/comics")
@@ -36,6 +36,13 @@ public class ComicRestController {
     @GetMapping("/{uuid}")
     public ComicDTO find(@PathVariable String uuid) {
         return new ComicDTO(comicService.findByUuid(uuid));
+    }
+
+    @GetMapping("/{uuid}/genres")
+    public ResponseEntity<Object> getGenre(@PathVariable String uuid) {
+        var genres = comicService.getGenresByComicUuid(uuid);
+
+        return ResponseEntity.ok(genres);
     }
 
     @PostMapping("/{id}/cover")
