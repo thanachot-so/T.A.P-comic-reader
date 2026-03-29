@@ -144,8 +144,8 @@ public class ComicServiceImpl implements ComicService{
 
     @Override
     @Transactional
-    public void setComicGenres(String comicUuid, Set<Integer> genreIds) {
-        var comic = findByUuid(comicUuid);
+    public void setComicGenres(int comicId, Set<Integer> genreIds) {
+        var comic = find(comicId);
 
         List<Genre> genres = genreRepository.findAllById(genreIds);
 

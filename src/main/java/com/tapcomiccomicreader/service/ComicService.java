@@ -28,7 +28,7 @@ public interface ComicService {
 
     Set<Genre> getGenresByComicUuid(String comicUuid);
 
-    void setComicGenres(String comicUuid, Set<Integer> genreIds);
+    void setComicGenres(int comicId, Set<Integer> genreIds);
 
     void uploadCover(int comicId, MultipartFile file) throws IOException;
 

@@ -70,12 +70,12 @@ public class ComicRestController {
         return ResponseEntity.ok(updatedComic);
     }
 
-    @PutMapping("/{uuid}/genres")
-    public ResponseEntity<Object> updateAllComicGenres(@PathVariable String uuid,
+    @PutMapping("/{id}/genres")
+    public ResponseEntity<Object> updateAllComicGenres(@PathVariable int id,
                                                        @RequestBody Set<Integer> genreIds) {
-        comicService.setComicGenres(uuid,genreIds);
+        comicService.setComicGenres(id,genreIds);
 
-        var comic = comicService.findByUuid(uuid);
+        var comic = comicService.find(id);
         return ResponseEntity.ok(comic);
     }
 
