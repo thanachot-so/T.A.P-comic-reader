@@ -1,10 +1,12 @@
 package com.tapcomiccomicreader.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Formula;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -41,6 +43,10 @@ public class Comic {
     @JsonIgnore
     private List<User> followers;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column(name = "create_at")
+    private LocalDateTime createAt;
+
     @ManyToMany
     @JoinTable(
             name = "comic_genres",
@@ -68,6 +74,12 @@ public class Comic {
     private Integer getChapterCount() {
         return chapterCount;
     }
+
+    @PrePersist
+    public void onCreate() {
+        this.createAt = LocalDateTime.now();
+    }
+
 
     public Comic() {
         this.uuid = java.util.UUID.randomUUID().toString();
@@ -168,6 +180,22 @@ public class Comic {
 
     public void setCoverUrl(String coverUrl) {
         this.coverUrl = coverUrl;
+    }
+
+    public LocalDateTime getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(LocalDateTime createAt) {
+        this.createAt = createAt;
+    }
+
+    public void setFollowerCount(Integer followerCount) {
+        this.followerCount = followerCount;
+    }
+
+    public void setChapterCount(Integer chapterCount) {
+        this.chapterCount = chapterCount;
     }
 
     @Override
