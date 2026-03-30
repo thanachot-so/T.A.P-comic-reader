@@ -38,6 +38,12 @@ public class Chapter {
     @Formula("(SELECT COUNT(*) FROM Page p WHERE p.chapter_id = id)")
     private Integer pageCount;
 
+    @Column(name = "like_count", nullable = false, columnDefinition = "integer default 0")
+    private int likeCount;
+
+    @Column(name = "dislike_count", nullable = false, columnDefinition = "integer default 0")
+    private int dislikeCount;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "create_at")
     private LocalDateTime createAt;
@@ -49,6 +55,8 @@ public class Chapter {
 
     public Chapter() {
         this.pages = new ArrayList<>();
+        this.likeCount = 0;
+        this.dislikeCount = 0;
     }
 
     public Chapter(String name) {
