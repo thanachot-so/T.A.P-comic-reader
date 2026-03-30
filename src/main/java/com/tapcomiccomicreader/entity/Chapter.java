@@ -120,6 +120,35 @@ public class Chapter {
         this.createAt = createAt;
     }
 
+    public int getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public int getDislikeCount() {
+        return dislikeCount;
+    }
+
+    public void setDislikeCount(int dislikeCount) {
+        this.dislikeCount = dislikeCount;
+    }
+
+    public void increaseLikeCount() {
+        this.likeCount += 1;
+    }
+    public void increaseDislikeCount() {
+        this.dislikeCount += 1;
+    }
+    public void decreaseLikeCount() {
+        this.likeCount -= 1;
+    }
+    public void decreaseDislikeCount() {
+        this.dislikeCount -= 1;
+    }
+
     @Override
     public String toString() {
         return "Chapter{" +
