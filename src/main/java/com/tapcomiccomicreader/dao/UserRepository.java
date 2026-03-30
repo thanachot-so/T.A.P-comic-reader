@@ -44,7 +44,7 @@ public interface UserRepository extends JpaRepository<User,Integer> {
             "ORDER BY similarity(name, :keyword) DESC", nativeQuery = true)
     Page<User> searchByName(@Param("keyword") String keyword, Pageable pageable);
 
-    @Query("SELECT f FROM User u JOIN u.friends f WHERE u.id = :userId")
+    @Query("SELECT f FROM User u JOIN u.followedFriends f WHERE u.id = :userId")
     Page<User> findFriend(@Param("userId") int userId ,Pageable pageable);
 
 }
