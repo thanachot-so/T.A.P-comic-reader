@@ -1,5 +1,6 @@
 package com.tapcomiccomicreader.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -28,6 +29,7 @@ public class ReplyComment {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String text;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "create_at")
     private LocalDateTime createAt;
 
