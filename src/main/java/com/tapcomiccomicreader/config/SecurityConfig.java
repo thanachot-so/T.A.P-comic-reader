@@ -77,6 +77,9 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/users/**").permitAll()
                 .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasRole("ADMIN")
 
+//                vote mapping
+                .requestMatchers("/api/vote/**").hasRole("USER")
+
         )
         .sessionManagement(
                 session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
