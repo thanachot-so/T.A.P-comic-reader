@@ -1,5 +1,6 @@
 package com.tapcomiccomicreader.service;
 
+import com.tapcomiccomicreader.dto.ChapterDTO;
 import com.tapcomiccomicreader.entity.Chapter;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -7,7 +8,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface ChapterService {
-    List<Chapter> findAll(int comicId);
+    List<ChapterDTO> findAll(int comicId);
 
     void deleteById(int id);
 
