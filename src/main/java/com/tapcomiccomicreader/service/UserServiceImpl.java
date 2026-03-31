@@ -2,22 +2,19 @@ package com.tapcomiccomicreader.service;
 
 import com.tapcomiccomicreader.dao.UserRepository;
 import com.tapcomiccomicreader.dto.FavoriteComicRequest;
-import com.tapcomiccomicreader.dto.LoginRequest;
 import com.tapcomiccomicreader.dto.UserDTO;
 import com.tapcomiccomicreader.entity.User;
 import com.tapcomiccomicreader.exception.ResourceNotFoundException;
+import com.tapcomiccomicreader.helperclass.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -76,6 +73,10 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public boolean addFriend(int userId, int friendId) {
+        if (userId == friendId) {
+            throw new IllegalArgumentException("user cannot add themselves as a friend");
+        }
+
         var user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("could not find user with the id - " + userId));
         var friend = userRepository.findById(friendId)
