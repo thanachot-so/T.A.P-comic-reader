@@ -75,6 +75,7 @@ public class SecurityConfig {
 //                user mapping
                 .requestMatchers(HttpMethod.POST, "/api/users/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/users/**").permitAll()
+                .requestMatchers(HttpMethod.PATCH, "/api/users/private").hasRole("USER")
                 .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasRole("ADMIN")
 
 //                vote mapping
