@@ -1,8 +1,8 @@
 package com.tapcomiccomicreader.rest;
 
+import com.tapcomiccomicreader.dto.CommentDTO;
 import com.tapcomiccomicreader.dto.CommentRequest;
 import com.tapcomiccomicreader.dto.ReplyRequest;
-import com.tapcomiccomicreader.entity.Comment;
 import com.tapcomiccomicreader.service.CommentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,17 +34,17 @@ public class CommentRestController {
     }
 
     @GetMapping("/comic/{comicId}")
-    public List<Comment> getComicComments(@PathVariable int comicId) {
+    public List<CommentDTO> getComicComments(@PathVariable int comicId) {
         return commentService.findByComicId(comicId);
     }
 
     @GetMapping("/chapter/{chapterId}")
-    public List<Comment> getChapterComments(@PathVariable int chapterId) {
+    public List<CommentDTO> getChapterComments(@PathVariable int chapterId) {
         return commentService.findByChapterId(chapterId);
     }
 
     @GetMapping("/page/{pageId}")
-    public List<Comment> getPageComments(@PathVariable int pageId) {
+    public List<CommentDTO> getPageComments(@PathVariable int pageId) {
         return commentService.findByPageId(pageId);
     }
 

@@ -1,33 +1,43 @@
 package com.tapcomiccomicreader.service;
 
+import com.tapcomiccomicreader.dao.CommentLikeRepository;
 import com.tapcomiccomicreader.dao.CommentRepository;
-import com.tapcomiccomicreader.dto.CommentRequest;
-import com.tapcomiccomicreader.dto.ReplyRequest;
+import com.tapcomiccomicreader.dao.ReplyCommentRepository;
+import com.tapcomiccomicreader.dao.UserRepository;
+import com.tapcomiccomicreader.dto.*;
 import com.tapcomiccomicreader.entity.*;
 import com.tapcomiccomicreader.exception.ResourceNotFoundException;
+import com.tapcomiccomicreader.helperclass.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentServiceImpl implements CommentService{
     private final CommentRepository commentRepository;
+    private final ReplyCommentRepository replyRepository;
     private final ReplyCommentService replyService;
     private final UserService userService;
     private final ComicService comicService;
     private final ChapterService chapterService;
     private final PageService pageService;
+    private final ReplyLikeService replyLikeService;
+    private final CommentLikeService commentLikeService;
 
     @Autowired
-    public CommentServiceImpl(CommentRepository commentRepository, ReplyCommentService replyService, UserService userService, ComicService comicService, ChapterService chapterService, PageService pageService) {
+    public CommentServiceImpl(CommentRepository commentRepository, ReplyCommentRepository replyRepository, ReplyCommentService replyService, UserService userService, UserRepository userRepository, ComicService comicService, ChapterService chapterService, PageService pageService, CommentLikeRepository commentLikeRepository, ReplyLikeService replyLikeService, CommentLikeService commentLikeService) {
         this.commentRepository = commentRepository;
+        this.replyRepository = replyRepository;
         this.replyService = replyService;
         this.userService = userService;
         this.comicService = comicService;
         this.chapterService = chapterService;
         this.pageService = pageService;
+        this.replyLikeService = replyLikeService;
+        this.commentLikeService = commentLikeService;
     }
 
     @Override
@@ -37,8 +47,8 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public List<Comment> findAll() {
-        return commentRepository.findAll();
+    public List<CommentDTO> findAll() {
+        return List.of();
     }
 
     @Override
@@ -63,18 +73,21 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public List<Comment> findByComicId(int comicId) {
-        return commentRepository.findByComicId(comicId);
+    public List<CommentDTO> findByComicId(int comicId) {
+        var comments = commentRepository.findByComicId(comicId);
+        return handleConvertToDTO(comments);
     }
 
     @Override
-    public List<Comment> findByChapterId(int chapterId) {
-        return commentRepository.findByChapterId(chapterId);
+    public List<CommentDTO> findByChapterId(int chapterId) {
+        var comments = commentRepository.findByChapterId(chapterId);
+        return handleConvertToDTO(comments);
     }
 
     @Override
-    public List<Comment> findByPageId(int pageId) {
-        return commentRepository.findByPageId(pageId);
+    public List<CommentDTO> findByPageId(int pageId) {
+        var comments = commentRepository.findByPageId(pageId);
+        return handleConvertToDTO(comments);
     }
 
     @Override
@@ -95,6 +108,44 @@ public class CommentServiceImpl implements CommentService{
     @Transactional
     public void delete(Comment comment) {
         commentRepository.delete(comment);
+    }
+
+    private List<CommentDTO> handleConvertToDTO(List<Comment> comments) {
+        Integer currentUserId = SecurityUtils.getCurrentUserId();
+
+        if (comments.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<Integer> commentIds = comments.stream().map(Comment::getId).toList();
+        List<ReplyComment> replies = replyRepository.findByParentIds(commentIds);
+        List<Integer> replyIds = replies.stream().map(ReplyComment::getId).toList();
+
+        Map<Integer, Boolean> commentVotesMap = Collections.emptyMap();
+        Map<Integer, Boolean> replyVotesMap = Collections.emptyMap();
+
+        if (currentUserId != null) {
+            commentVotesMap = commentLikeService.getUserVotes(currentUserId, commentIds);
+            replyVotesMap = replyLikeService.getUserVotes(currentUserId, replyIds);
+        }
+
+        final var finalReplyVotesMap = replyVotesMap;
+        Map<Integer,List<ReplyCommentDTO>> repliesMap = replies.stream()
+                .collect(Collectors.groupingBy(ReplyComment::getMainCommentId,
+                        Collectors.mapping(
+                                reply -> new ReplyCommentDTO(
+                                        reply,
+                                        finalReplyVotesMap.get(reply.getId()))
+                                ,Collectors.toList()
+                        )
+                ));
+
+        final var commentsMap = commentVotesMap;
+        return comments.stream().map(
+                comment -> new CommentDTO(
+                        comment,
+                        commentsMap.get(comment.getId()),
+                        repliesMap.get(comment.getId()))).toList();
     }
 }
 
