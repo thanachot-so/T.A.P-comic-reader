@@ -44,7 +44,7 @@ public class Comic {
     private List<User> followers;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Column(name = "create_at")
+    @Column(name = "create_at", updatable = false)
     private LocalDateTime createAt;
 
     @ManyToMany
