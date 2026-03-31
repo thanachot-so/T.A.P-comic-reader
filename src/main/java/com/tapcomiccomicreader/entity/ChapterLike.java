@@ -66,7 +66,7 @@ public class ChapterLike implements Likeable {
 
     @Override
     public Integer getTargetId() {
-        return this.id;
+        return this.chapter.getId();
     }
 
     @Override

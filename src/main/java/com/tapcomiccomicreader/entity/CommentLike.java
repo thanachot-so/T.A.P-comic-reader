@@ -66,7 +66,7 @@ public class CommentLike implements Likeable {
 
     @Override
     public Integer getTargetId() {
-        return this.id;
+        return this.comment.getId();
     }
 
     @Override
