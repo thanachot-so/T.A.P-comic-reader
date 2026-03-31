@@ -46,7 +46,7 @@ public class Chapter implements Interactable {
     private int dislikeCount;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Column(name = "create_at")
+    @Column(name = "create_at", updatable = false)
     private LocalDateTime createAt;
 
     @PrePersist
