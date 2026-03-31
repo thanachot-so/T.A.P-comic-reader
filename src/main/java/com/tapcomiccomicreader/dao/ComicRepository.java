@@ -17,6 +17,14 @@ public interface ComicRepository  extends JpaRepository<Comic,Integer> {
     Optional<Comic> findComicByUuid(@Param("uuid") String uuid);
 
     @Query("SELECT c FROM Comic c " +
+            "ORDER BY c.createAt DESC")
+    Page<Comic> findAllRecent(Pageable pageable);
+
+    @Query("SELECT c FROM Comic c " +
+            "ORDER BY c.followerCount DESC")
+    Page<Comic> findAllMostPopular(Pageable pageable);
+
+    @Query("SELECT c FROM Comic c " +
             "JOIN c.genres g " +
             "WHERE g.id = :genreId")
     List<Comic> findByGenreId(@Param("genreId") int genreId);

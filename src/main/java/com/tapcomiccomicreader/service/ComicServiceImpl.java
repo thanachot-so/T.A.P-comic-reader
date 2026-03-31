@@ -68,6 +68,24 @@ public class ComicServiceImpl implements ComicService{
     }
 
     @Override
+    public Page<ComicDTO> findMostRecent(int page) {
+        int pageSize = 10;
+        Pageable pageable = PageRequest.of(page, pageSize);
+
+        var comics = comicRepository.findAllRecent(pageable);
+        return comics.map(ComicDTO::new);
+    }
+
+    @Override
+    public Page<ComicDTO> findMostPopular(int page) {
+        int pageSize = 10;
+        Pageable pageable = PageRequest.of(page, pageSize);
+
+        var comics = comicRepository.findAllMostPopular(pageable);
+        return comics.map(ComicDTO::new);
+    }
+
+    @Override
     public Comic findByUuid(String comicUuid) {
         return comicRepository.findComicByUuid(comicUuid)
                 .orElseThrow(() -> new ResourceNotFoundException("could not find comic with uuid " + comicUuid));

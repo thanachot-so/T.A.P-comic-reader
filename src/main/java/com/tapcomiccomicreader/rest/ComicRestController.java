@@ -38,6 +38,15 @@ public class ComicRestController {
         return new ComicDTO(comicService.findByUuid(uuid));
     }
 
+    @GetMapping
+    public Page<ComicDTO> findMostRecent(@RequestParam(defaultValue = "0") int page) {
+        return comicService.findMostRecent(page);
+    }
+    @GetMapping
+    public Page<ComicDTO> findMostPopular(@RequestParam(defaultValue = "0") int page) {
+        return comicService.findMostPopular(page);
+    }
+
     @GetMapping("/{uuid}/genres")
     public ResponseEntity<Object> getGenre(@PathVariable String uuid) {
         var genres = comicService.getGenresByComicUuid(uuid);

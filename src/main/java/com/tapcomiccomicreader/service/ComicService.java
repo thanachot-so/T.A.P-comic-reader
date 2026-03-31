@@ -20,6 +20,10 @@ public interface ComicService {
 
     Comic find(int id);
 
+    Page<ComicDTO> findMostRecent(int page);
+
+    Page<ComicDTO> findMostPopular(int page);
+
     Comic findByUuid(String comicUuid);
 
     Page<ComicDTO> search(String keyword, int pageNumber);
