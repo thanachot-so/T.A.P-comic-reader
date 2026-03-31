@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/layout :: head('Add New Comic')}"></head>
+<body>
+<div th:replace="~{admin/layout :: navbar}"></div>
+
+<div class="container-fluid d-flex">
+  <div th:replace="~{admin/layout :: sidebar}"></div>
+
+  <div class="flex-grow-1 p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>Add New Comic</h2>
+      <a href="/admin/comics" class="btn btn-secondary">Back to Comics</a>
+    </div>
+
+    <div class="card" style="max-width: 800px;">
+      <div class="card-header bg-primary text-white">Comic Details</div>
+      <div class="card-body">
+        <form th:action="@{/admin/comics/new}" method="post" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label class="form-label">Title / Name *</label>
+            <input type="text" class="form-control" name="name" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Description *</label>
+            <textarea class="form-control" name="description" rows="4" required></textarea>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Author</label>
+              <input type="text" class="form-control" name="author">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Artist</label>
+              <input type="text" class="form-control" name="artist">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Cover Image *</label>
+            <input type="file" class="form-control" name="coverFile" accept="image/*" required>
+          </div>
+
+          <div class="alert alert-info">
+            <strong>Note:</strong> You can assign Genres to this comic after creating it by clicking "Edit" in the Comics list.
+          </div>
+
+          <button type="submit" class="btn btn-primary">Create Comic</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

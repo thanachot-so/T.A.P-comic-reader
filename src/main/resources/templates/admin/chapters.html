@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/layout :: head('Manage Chapters')}"></head>
+<body>
+<div th:replace="~{admin/layout :: navbar}"></div>
+
+<div class="container-fluid d-flex">
+  <div th:replace="~{admin/layout :: sidebar}"></div>
+
+  <div class="flex-grow-1 p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>Chapters for: <span th:text="${comic.title}"></span></h2>
+      <a href="/admin/comics" class="btn btn-secondary">Back to Comics</a>
+    </div>
+
+    <div class="card mb-4">
+      <div class="card-header bg-success text-white">Upload New Chapter</div>
+      <div class="card-body">
+        <form th:action="@{/admin/comics/{id}/chapters/upload(id=${comic.id})}" method="post" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label class="form-label">Select Comic Pages (Images)</label>
+            <input type="file" class="form-control" name="files" multiple accept="image/*" required>
+            <div class="form-text">Select multiple images at once. They will be uploaded in sequence.</div>
+          </div>
+          <button type="submit" class="btn btn-success">Upload Chapter</button>
+        </form>
+      </div>
+    </div>
+
+    <table class="table table-bordered table-striped">
+      <thead class="table-dark">
+      <tr>
+        <th>Chapter ID</th>
+        <th>Chapter Number</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="chapter : ${chapters}">
+        <td th:text="${chapter.id}"></td>
+        <td th:text="'Chapter ' + ${chapter.count()}"></td>
+        <td>
+          <form th:action="@{/admin/comics/chapters/{cid}/delete(cid=${chapter.id})}" method="post" class="d-inline">
+            <input type="hidden" name="comicId" th:value="${comic.id}">
+            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this chapter?')">Delete</button>
+          </form>
+        </td>
+      </tr>
+      <tr th:if="${#lists.isEmpty(chapters)}">
+        <td colspan="3" class="text-center text-muted">No chapters uploaded yet.</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>

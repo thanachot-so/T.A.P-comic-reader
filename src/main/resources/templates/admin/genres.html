@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/layout :: head('Manage Genres')}"></head>
+<body>
+<div th:replace="~{admin/layout :: navbar}"></div>
+
+<div class="container-fluid d-flex">
+  <div th:replace="~{admin/layout :: sidebar}"></div>
+
+  <div class="flex-grow-1 p-4">
+    <h2>Genres</h2>
+
+    <div class="card mb-4 mt-3" style="max-width: 500px;">
+      <div class="card-header bg-primary text-white">Add New Genre</div>
+      <div class="card-body">
+        <form th:action="@{/admin/genres/new}" method="post" class="d-flex">
+          <input type="text" class="form-control me-2" name="name" placeholder="Genre Name" required>
+          <button type="submit" class="btn btn-primary">Add</button>
+        </form>
+      </div>
+    </div>
+
+    <table class="table table-bordered" style="max-width: 500px;">
+      <thead class="table-light">
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="genre : ${genres}">
+        <td th:text="${genre.id}"></td>
+        <td th:text="${genre.name}"></td>
+        <td>
+          <form th:action="@{/admin/genres/{id}/delete(id=${genre.id})}" method="post" class="d-inline">
+            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this genre?')">Delete</button>
+          </form>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/layout :: head('Edit Comic')}"></head>
+<body>
+<div th:replace="~{admin/layout :: navbar}"></div>
+
+<div class="container-fluid d-flex">
+    <div th:replace="~{admin/layout :: sidebar}"></div>
+
+    <div class="flex-grow-1 p-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Edit Comic: <span th:text="${comic.title}"></span></h2>
+            <a href="/admin/comics" class="btn btn-secondary">Back to Comics</a>
+        </div>
+
+        <div th:if="${param.success != null}" class="alert alert-success">
+            Update successful!
+        </div>
+
+        <div class="row">
+            <div class="col-md-7">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">Comic Details</div>
+                    <div class="card-body">
+                        <form th:action="@{/admin/comics/{id}/edit(id=${comic.id})}" method="post" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label class="form-label">Title</label>
+                                <input type="text" class="form-control" name="title" th:value="${comic.title}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Description</label>
+                                <textarea class="form-control" name="description" rows="4" th:text="${comic.description}" required></textarea>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Author</label>
+                                    <input type="text" class="form-control" name="author" th:value="${comic.author}">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Artist</label>
+                                    <input type="text" class="form-control" name="artist" th:value="${comic.artist}">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Update Cover Image (Leave blank to keep current)</label>
+                                <input type="file" class="form-control" name="coverFile" accept="image/*">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Details</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                <div class="card mb-4">
+                    <div class="card-header bg-info text-white">Manage Genres</div>
+                    <div class="card-body">
+                        <form th:action="@{/admin/comics/{id}/genres(id=${comic.id})}" method="post">
+                            <div class="row">
+                                <div class="col-6 mb-2" th:each="genre : ${allGenres}">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="genreIds"
+                                               th:value="${genre.id}"
+                                               th:id="'genre_' + ${genre.id}"
+                                               th:checked="${comicGenreIds.contains(genre.id)}">
+                                        <label class="form-check-label" th:for="'genre_' + ${genre.id}" th:text="${genre.name}">
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <button type="submit" class="btn btn-info text-white">Update Genres</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

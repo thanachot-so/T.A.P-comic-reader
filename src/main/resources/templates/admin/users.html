@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/layout :: head('Manage Users')}"></head>
+<body>
+<div th:replace="~{admin/layout :: navbar}"></div>
+
+<div class="container-fluid d-flex">
+    <div th:replace="~{admin/layout :: sidebar}"></div>
+
+    <div class="flex-grow-1 p-4">
+        <h2>Registered Users</h2>
+
+        <table class="table table-striped table-hover mt-3">
+            <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>UUID</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.id}"></td>
+                <td th:text="${user.name}"></td>
+                <td th:text="${user.uuid}"></td>
+                <td th:text="${user.role}"></td>
+                <td>
+                    <form th:action="@{/admin/users/{id}/delete(id=${user.id})}" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-danger"
+                                th:disabled="${user.role == 'ADMIN'}"
+                                onclick="return confirm('Permanently delete this user and all their data?')">
+                            Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
