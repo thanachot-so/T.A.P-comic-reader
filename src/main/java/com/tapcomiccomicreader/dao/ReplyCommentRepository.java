@@ -9,4 +9,7 @@ import java.util.List;
 public interface ReplyCommentRepository extends JpaRepository<ReplyComment, Integer> {
     @Query("SELECT r FROM ReplyComment r WHERE r.mainComment.id = :parentId")
     List<ReplyComment> findByParentId(int parentId);
+
+    @Query("SELECT r FROM ReplyComment r WHERE r.mainComment.id IN :parentId")
+    List<ReplyComment> findByParentIds(List<Integer> parentId);
 }
