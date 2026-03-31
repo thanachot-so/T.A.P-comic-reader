@@ -65,3 +65,40 @@ spring.servlet.multipart.max-request-size=100MB
 
 # CORS Configuration
 cors.allowed-origin=http://localhost:3000
+
+# Security admin account configuration
+spring.security.user.name=your_admin_username
+spring.security.user.password=your_password_in_bcrypt
+spring.security.user.roles=ADMIN,USER
+```
+
+*Note: Ensure the `pg_trgm` extension is enabled in your PostgreSQL database to support the similarity search queries:*
+```sql
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+```
+
+## Security Architecture
+
+This application utilizes a dual `SecurityFilterChain` architecture to handle distinct client types:
+
+1.  **API Chain (`/api/**`):** `@Order(1)`. Configured as strictly `STATELESS`. Validates requests using a custom `JwtAuthenticationFilter`.
+2.  **Admin Web Chain (`/admin/**`):** `@Order(2)`. Configured to support standard browser sessions. Secured via `httpBasic()` requiring the `ADMIN` role.
+
+## Running the Application
+
+1.  Clone the repository.
+2.  Configure your local database and update `application.properties`.
+3.  Build the project using Maven:
+    ```bash
+    mvn clean install
+    ```
+4.  Run the application:
+    ```bash
+    mvn spring-boot:run
+    ```
+
+## Accessing the Admin Dashboard
+
+1.  Ensure you have at least one user in your database or setup the security admin account with the `role` column set strictly to `ADMIN`.
+2.  Navigate to `http://localhost:8080/admin` in your web browser.
+3.  When prompted by the browser's native authentication pop-up, enter the username and password of the admin user.
