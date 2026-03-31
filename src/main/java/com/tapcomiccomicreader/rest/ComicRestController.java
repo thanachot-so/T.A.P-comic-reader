@@ -38,11 +38,11 @@ public class ComicRestController {
         return new ComicDTO(comicService.findByUuid(uuid));
     }
 
-    @GetMapping
+    @GetMapping("/recent")
     public Page<ComicDTO> findMostRecent(@RequestParam(defaultValue = "0") int page) {
         return comicService.findMostRecent(page);
     }
-    @GetMapping
+    @GetMapping("/popular")
     public Page<ComicDTO> findMostPopular(@RequestParam(defaultValue = "0") int page) {
         return comicService.findMostPopular(page);
     }
