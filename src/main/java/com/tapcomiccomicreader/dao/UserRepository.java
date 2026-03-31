@@ -42,6 +42,7 @@ public interface UserRepository extends JpaRepository<User,Integer> {
             "FROM users " +
             "WHERE (name ILIKE '%' || :keyword || '%' OR name % :keyword) " +
             "AND (:currentUserId IS NULL OR users.id != CAST(CAST(:currentUserId AS TEXT) AS INTEGER)) " +
+            "AND users.is_private IS FALSE " +
             "ORDER BY similarity(name, :keyword) DESC", nativeQuery = true)
     Page<User> searchByName(@Param("keyword") String keyword,
                             @Param("currentUserId") Integer currentUserId,

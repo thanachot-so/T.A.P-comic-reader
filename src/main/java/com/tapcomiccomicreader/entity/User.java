@@ -33,6 +33,9 @@ public class User {
     @JsonIgnore
     private String password;
 
+    @Column(name = "is_private", columnDefinition = "boolean default false")
+    private boolean isPrivate;
+
     @ManyToMany
     @JoinTable(
             name = "user_follows",
@@ -164,6 +167,14 @@ public class User {
         this.role = role;
     }
 
+    public boolean isPrivate() {
+        return isPrivate;
+    }
+
+    public void setPrivate(boolean aPrivate) {
+        isPrivate = aPrivate;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -173,6 +184,7 @@ public class User {
                 ", name='" + name + '\'' +
                 ", role='" + role + '\'' +
                 ", password='" + password + '\'' +
+                ", isPrivate=" + isPrivate +
                 ", followedComics=" + followedComics +
                 ", followedFriends=" + followedFriends +
                 ", followedComicsCount=" + followedComicsCount +

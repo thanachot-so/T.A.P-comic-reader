@@ -7,12 +7,14 @@ public class UserDTO {
     private String uuid;
     private Integer followedComicCount;
     private Integer friends;
+    private boolean isPrivate;
 
     public UserDTO(User user) {
         this.name = user.getName();
         this.uuid = user.getUuid();
         this.followedComicCount = user.getFollowedComicsCount();
         this.friends = user.getFriends();
+        this.isPrivate = user.isPrivate();
     }
 
     public String getName() {
@@ -47,6 +49,14 @@ public class UserDTO {
         this.friends = friends;
     }
 
+    public boolean isPrivate() {
+        return isPrivate;
+    }
+
+    public void setPrivate(boolean aPrivate) {
+        isPrivate = aPrivate;
+    }
+
     @Override
     public String toString() {
         return "UserDTO{" +
@@ -54,6 +64,7 @@ public class UserDTO {
                 ", uuid='" + uuid + '\'' +
                 ", followedComicCount=" + followedComicCount +
                 ", friends=" + friends +
+                ", isPrivate=" + isPrivate +
                 '}';
     }
 }

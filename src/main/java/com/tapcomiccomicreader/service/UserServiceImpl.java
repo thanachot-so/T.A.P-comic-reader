@@ -82,6 +82,10 @@ public class UserServiceImpl implements UserService{
         var friend = userRepository.findById(friendId)
                 .orElseThrow(() -> new ResourceNotFoundException("could not find friend with the id - " + friendId));
 
+        if (friend.isPrivate() || user.isPrivate()) {
+            throw new IllegalArgumentException("you or the user you are trying to add is on private mode");
+        }
+
         boolean isAdd = user.addFriend(friend);
 
         userRepository.save(user);
@@ -124,5 +128,15 @@ public class UserServiceImpl implements UserService{
         var friendPages = userRepository.findFriend(user.getId(), pageable);
 
         return friendPages.map(UserDTO::new);
+    }
+
+    @Override
+    @Transactional
+    public void switchPrivate() {
+        Integer userId = SecurityUtils.getCurrentUserId();
+        if (userId != null) {
+        var user = findById(userId);
+        user.setPrivate(!user.isPrivate());
+        }
     }
 }

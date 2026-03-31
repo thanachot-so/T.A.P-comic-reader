@@ -81,4 +81,10 @@ public class UserRestController {
                                 @RequestParam(defaultValue = "0") int page) {
         return userService.search(request.getKeyword(), page);
     }
+
+    @PatchMapping("/private")
+    public ResponseEntity<Void> swapPrivate() {
+        userService.switchPrivate();
+        return ResponseEntity.ok().build();
+    }
 }

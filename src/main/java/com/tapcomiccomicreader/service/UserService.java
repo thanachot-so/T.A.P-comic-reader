@@ -27,4 +27,6 @@ public interface UserService{
     Page<UserDTO> search(String keyword, int pageNumber);
 
     Page<UserDTO> findFriends(String uuid, int pageNumber);
+
+    void switchPrivate();
 }
