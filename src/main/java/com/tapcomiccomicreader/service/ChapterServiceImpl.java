@@ -1,11 +1,9 @@
 package com.tapcomiccomicreader.service;
 
-import com.tapcomiccomicreader.dao.ChapterLikeRepository;
 import com.tapcomiccomicreader.dao.ChapterRepository;
 import com.tapcomiccomicreader.dao.PageRepository;
 import com.tapcomiccomicreader.dto.ChapterDTO;
 import com.tapcomiccomicreader.entity.Chapter;
-import com.tapcomiccomicreader.entity.ChapterLike;
 import com.tapcomiccomicreader.entity.Comic;
 import com.tapcomiccomicreader.entity.Page;
 import com.tapcomiccomicreader.exception.ResourceNotFoundException;
@@ -27,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Service
 public class ChapterServiceImpl implements ChapterService{
@@ -38,17 +35,17 @@ public class ChapterServiceImpl implements ChapterService{
     private final ChapterRepository chapterRepository;
     private final PageRepository pageRepository;
     private final ComicService comicService;
-    private final ChapterLikeRepository chapterLikeRepository;
+    private final ChapterLikeService chapterLikeService;
     private static final Pattern NUMBER_PATTERN = Pattern.compile("(\\d+)");
 
 
     @Autowired
-    public ChapterServiceImpl(ChapterRepository chapterRepository, PageRepository pageRepository, ComicService comicService, PageService pageService, ChapterLikeRepository chapterLikeRepository) {
+    public ChapterServiceImpl(ChapterRepository chapterRepository, PageRepository pageRepository, ComicService comicService, PageService pageService, ChapterLikeService chapterLikeService) {
         this.chapterRepository = chapterRepository;
         this.pageRepository = pageRepository;
         this.comicService = comicService;
         this.pageService = pageService;
-        this.chapterLikeRepository = chapterLikeRepository;
+        this.chapterLikeService = chapterLikeService;
     }
 
     @PostConstruct
@@ -66,38 +63,15 @@ public class ChapterServiceImpl implements ChapterService{
 
         if (currentUserId == null) {
             return chapters.stream()
-                    .map(chapter -> new ChapterDTO(
-                            chapter.getId(),
-                            chapter.getName(),
-                            chapter.getCount(),
-                            chapter.getPageCount(),
-                            chapter.getLikeCount(),
-                            chapter.getDislikeCount(),
-                            null,
-                            chapter.getCreateAt()
-                    )).toList();
+                    .map(chapter -> new ChapterDTO(chapter, null)).toList();
         }
 
         var chapterIds = chapters.stream().map(Chapter::getId).toList();
 
-        var userVotes = chapterLikeRepository.findByUserIdAndChapterIds(currentUserId, chapterIds);
-
-        Map<Integer, Boolean> votes = userVotes.stream()
-                .collect(Collectors.toMap(
-                        vote -> vote.getChapter().getId(),
-                        ChapterLike::isLiked)
-                );
+        Map<Integer, Boolean> votes = chapterLikeService.getUserVotes(currentUserId, chapterIds);
 
         return chapters.stream()
-                .map(chapter -> new ChapterDTO(
-                        chapter.getId(),
-                        chapter.getName(),
-                        chapter.getCount(),
-                        chapter.getPageCount(),
-                        chapter.getLikeCount(),
-                        chapter.getDislikeCount(),
-                        votes.get(chapter.getId()),
-                        chapter.getCreateAt()
+                .map(chapter -> new ChapterDTO(chapter, votes.get(chapter.getId())
                 )).toList();
     }
 
