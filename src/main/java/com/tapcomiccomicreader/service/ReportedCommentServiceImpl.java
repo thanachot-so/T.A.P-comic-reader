@@ -39,7 +39,7 @@ public class ReportedCommentServiceImpl implements ReportedCommentService{
             var comment = commentService.find(request.getCommentId());
             report.setComment(comment);
         } else if (request.commentType().equals("REPLY")) {
-            var reply = replyService.find(request.getReplyId());
+            var reply = replyService.findById(request.getReplyId());
             report.setReply(reply);
         } else {
             throw new RuntimeException("no report type");
