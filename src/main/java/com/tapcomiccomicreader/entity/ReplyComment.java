@@ -4,13 +4,14 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.tapcomiccomicreader.helperclass.Interactable;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "reply_comments")
-public class ReplyComment {
+public class ReplyComment implements Interactable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -28,6 +29,12 @@ public class ReplyComment {
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String text;
+
+    @Column(name = "like_count", nullable = false, columnDefinition = "integer default 0")
+    private int likeCount;
+
+    @Column(name = "dislike_count", nullable = false, columnDefinition = "integer default 0")
+    private int dislikeCount;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "create_at")
@@ -73,6 +80,22 @@ public class ReplyComment {
         this.text = text;
     }
 
+    public int getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public int getDislikeCount() {
+        return dislikeCount;
+    }
+
+    public void setDislikeCount(int dislikeCount) {
+        this.dislikeCount = dislikeCount;
+    }
+
     public LocalDateTime getCreateAt() {
         return createAt;
     }
@@ -93,6 +116,8 @@ public class ReplyComment {
                 ", user=" + user +
                 ", mainComment=" + mainComment +
                 ", text='" + text + '\'' +
+                ", likeCount=" + likeCount +
+                ", dislikeCount=" + dislikeCount +
                 ", createAt=" + createAt +
                 '}';
     }
