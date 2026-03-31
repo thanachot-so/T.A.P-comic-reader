@@ -40,9 +40,12 @@ public interface UserRepository extends JpaRepository<User,Integer> {
             "(SELECT COUNT(*) FROM user_follows uf WHERE uf.user_id = users.id) AS followedComicsCount," +
             "(SELECT COUNT(*) FROM user_friends ufr WHERE ufr.user_id = users.id) AS friends " +
             "FROM users " +
-            "WHERE name ILIKE '%' || :keyword || '%' OR name % :keyword " +
+            "WHERE (name ILIKE '%' || :keyword || '%' OR name % :keyword) " +
+            "AND (:currentUserId IS NULL OR users.id != CAST(CAST(:currentUserId AS TEXT) AS INTEGER)) " +
             "ORDER BY similarity(name, :keyword) DESC", nativeQuery = true)
-    Page<User> searchByName(@Param("keyword") String keyword, Pageable pageable);
+    Page<User> searchByName(@Param("keyword") String keyword,
+                            @Param("currentUserId") Integer currentUserId,
+                            Pageable pageable);
 
     @Query("SELECT f FROM User u JOIN u.followedFriends f WHERE u.id = :userId")
     Page<User> findFriend(@Param("userId") int userId ,Pageable pageable);

@@ -103,11 +103,12 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public Page<UserDTO> search(String keyword, int pageNumber) {
-        int pageSize = 20;
+        Integer currentUserId = SecurityUtils.getCurrentUserId();
 
+        int pageSize = 20;
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
 
-        var userPages = userRepository.searchByName(keyword, pageable);
+        var userPages = userRepository.searchByName(keyword, currentUserId, pageable);
 
         return userPages.map(UserDTO::new);
     }
