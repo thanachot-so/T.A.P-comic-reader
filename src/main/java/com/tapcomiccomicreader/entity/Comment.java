@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.tapcomiccomicreader.helperclass.Interactable;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "comments")
-public class Comment {
+public class Comment implements Interactable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -50,6 +51,12 @@ public class Comment {
 
     @Column(name = "is_edited")
     private boolean isEdited;
+
+    @Column(name = "like_count", nullable = false, columnDefinition = "integer default 0")
+    private int likeCount;
+
+    @Column(name = "dislike_count", nullable = false, columnDefinition = "integer default 0")
+    private int dislikeCount;
 
     @PrePersist
     public void onCreate() {
@@ -153,6 +160,22 @@ public class Comment {
         this.replies = replies;
     }
 
+    public int getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public int getDislikeCount() {
+        return dislikeCount;
+    }
+
+    public void setDislikeCount(int dislikeCount) {
+        this.dislikeCount = dislikeCount;
+    }
+
     @Override
     public String toString() {
         return "Comment{" +
@@ -165,6 +188,8 @@ public class Comment {
                 ", replies=" + replies +
                 ", createAt=" + createAt +
                 ", isEdited=" + isEdited +
+                ", likeCount=" + likeCount +
+                ", dislikeCount=" + dislikeCount +
                 '}';
     }
 }

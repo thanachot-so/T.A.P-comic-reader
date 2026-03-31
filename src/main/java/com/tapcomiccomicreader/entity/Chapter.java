@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.tapcomiccomicreader.helperclass.Interactable;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Formula;
 
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "comic_chapter")
-public class Chapter {
+public class Chapter implements Interactable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -134,19 +135,6 @@ public class Chapter {
 
     public void setDislikeCount(int dislikeCount) {
         this.dislikeCount = dislikeCount;
-    }
-
-    public void increaseLikeCount() {
-        this.likeCount += 1;
-    }
-    public void increaseDislikeCount() {
-        this.dislikeCount += 1;
-    }
-    public void decreaseLikeCount() {
-        this.likeCount -= 1;
-    }
-    public void decreaseDislikeCount() {
-        this.dislikeCount -= 1;
     }
 
     @Override

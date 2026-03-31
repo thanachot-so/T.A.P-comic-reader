@@ -1,12 +1,13 @@
 package com.tapcomiccomicreader.entity;
 
+import com.tapcomiccomicreader.helperclass.Likeable;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "chapter_likes", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"user_id", "chapter_id"})
 })
-public class ChapterLike {
+public class ChapterLike implements Likeable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -55,12 +56,17 @@ public class ChapterLike {
         this.chapter = chapter;
     }
 
-    public boolean isLiked() {
+    public Boolean isLiked() {
         return isLiked;
     }
 
-    public void setLiked(boolean liked) {
+    public void setLike(Boolean liked) {
         isLiked = liked;
+    }
+
+    @Override
+    public Integer getTargetId() {
+        return this.id;
     }
 
     @Override
