@@ -12,17 +12,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class ChapterLikeServiceImpl implements ChapterLikeService{
+public class ChapterLikeServiceImpl extends AbstractLikeableService<Chapter, ChapterLike> implements ChapterLikeService{
     private final ChapterLikeRepository chapterLikeRepository;
     private final ChapterRepository chapterRepository;
-    private final UserRepository userRepository;
 
 
     @Autowired
-    public ChapterLikeServiceImpl(ChapterLikeRepository chapterLikeRepository, ChapterRepository chapterRepository, UserRepository userRepository) {
+    public ChapterLikeServiceImpl(ChapterLikeRepository chapterLikeRepository, UserRepository userRepository, ChapterRepository chapterRepository) {
+        super(chapterLikeRepository, userRepository);
         this.chapterLikeRepository = chapterLikeRepository;
         this.chapterRepository = chapterRepository;
-        this.userRepository = userRepository;
     }
 
 
@@ -33,44 +32,12 @@ public class ChapterLikeServiceImpl implements ChapterLikeService{
     }
 
     @Override
-    @Transactional
-    public void vote(int userId, int chapterId, boolean vote) {
-        var user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("could not find user with id " + userId));
-
-        var chapter = chapterRepository.findById(chapterId)
-                .orElseThrow(() -> new ResourceNotFoundException("could not find chapter with id " + userId));
-
-        chapterLikeRepository.findByUserIdAndChapterId(userId, chapterId)
-                .ifPresentOrElse(
-        existingVote -> handleExistingVote(existingVote, chapter, vote),
-                    () -> handleNewVote(user, chapter, vote)
-                );
+    protected ChapterLike createNewLikeable(User user, Chapter chapter, boolean vote) {
+        return new ChapterLike(user, chapter, vote);
     }
 
-    private void handleExistingVote(ChapterLike existingVote, Chapter chapter, boolean isLike) {
-        if (existingVote.isLiked() == isLike) {
-            chapterLikeRepository.delete(existingVote);
-            handleAdjustChapterVote(chapter, isLike, -1);
-        } else {
-            existingVote.setLiked(isLike);
-            handleAdjustChapterVote(chapter, !isLike, -1);
-            handleAdjustChapterVote(chapter, isLike, 1);
-        }
-    }
-
-    private void handleNewVote(User user, Chapter chapter, boolean vote) {
-        var chapterLike = new ChapterLike(user, chapter, vote);
-
-        chapterLikeRepository.save(chapterLike);
-        handleAdjustChapterVote(chapter, vote, 1);
-    }
-
-    private void handleAdjustChapterVote(Chapter chapter, boolean isLike, int amount) {
-        if (isLike) {
-            chapter.setLikeCount(chapter.getLikeCount() + amount);
-        } else {
-            chapter.setDislikeCount(chapter.getDislikeCount() + amount);
-        }
+    @Override
+    protected Chapter getTarget(int targetId) {
+        return chapterRepository.findById(targetId).orElseThrow(() -> new ResourceNotFoundException(""));
     }
 }

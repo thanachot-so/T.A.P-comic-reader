@@ -1,29 +1,24 @@
 package com.tapcomiccomicreader.dao;
 
-import com.tapcomiccomicreader.entity.Chapter;
 import com.tapcomiccomicreader.entity.ChapterLike;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Repository
-public interface ChapterLikeRepository extends JpaRepository<ChapterLike, Integer> {
+public interface ChapterLikeRepository extends GenericLikeableRepository<ChapterLike> {
     @Query("SELECT cl FROM ChapterLike cl " +
             "WHERE cl.user.id = :userId " +
-            "AND cl.chapter.id IN :chapterIds")
-    List<ChapterLike> findByUserIdAndChapterIds(@Param("userId")int userId,
-                                                @Param("chapterIds")List<Integer> chapterIds);
+            "AND cl.chapter.id = :targetId")
+    Optional<ChapterLike> findByUserIdAndTargetId(@Param("userId") int userId,
+                                                  @Param("targetId") int targetId);
 
     @Query("SELECT cl FROM ChapterLike cl " +
             "WHERE cl.user.id = :userId " +
-            "AND cl.chapter.id = :chapterId")
-    Optional<ChapterLike> findByUserIdAndChapterId(@Param("userId")int userId,
-                                                   @Param("chapterId")int chapterId);
-
-    Set<Integer> chapter(Chapter chapter);
+            "AND cl.chapter.id IN :targetId")
+    List<ChapterLike> findByUserIdAndTargetIds(@Param("userId") int userId,
+                                              @Param("targetId") List<Integer> targetId);
 }
