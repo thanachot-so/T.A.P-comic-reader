@@ -6,6 +6,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class PageDTO {
     private String pageUrl;
     private int pageNumber;
+    private int pageId;
 
     public PageDTO(Page page) {
         String url = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -14,6 +15,7 @@ public class PageDTO {
 
         this.pageUrl = url + page.getUrl();
         this.pageNumber = page.getCount();
+        this.pageId = page.getId();
     }
 
     public PageDTO() {
@@ -35,11 +37,20 @@ public class PageDTO {
         this.pageNumber = pageNumber;
     }
 
+    public int getPageId() {
+        return pageId;
+    }
+
+    public void setPageId(int pageId) {
+        this.pageId = pageId;
+    }
+
     @Override
     public String toString() {
         return "PageDTO{" +
                 "pageUrl='" + pageUrl + '\'' +
                 ", pageNumber=" + pageNumber +
+                ", pageId=" + pageId +
                 '}';
     }
 }
