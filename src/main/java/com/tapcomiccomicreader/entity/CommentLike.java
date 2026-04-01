@@ -2,6 +2,8 @@ package com.tapcomiccomicreader.entity;
 
 import com.tapcomiccomicreader.helperclass.Likeable;
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "comment_likes", uniqueConstraints = {
@@ -14,6 +16,7 @@ public class CommentLike implements Likeable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Comment comment;
 
     @ManyToOne(fetch = FetchType.LAZY)
